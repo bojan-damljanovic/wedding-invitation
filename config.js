@@ -14,7 +14,7 @@ const CONFIG = {
   ona: "Aleksandra",
   on: "Đorđe",
   inicijali: "A\u00A0Đ",          // stoji u pečatu
-  hashtag: "#AleksandraIĐorđe",
+  hashtag: "#Aleksandra-i-Đorđe",
 
   /* ── Datum i vreme venčanja ─────────────────────────────── */
   datumISO: "2026-09-12T16:00:00+02:00",   // za odbrojavanje
