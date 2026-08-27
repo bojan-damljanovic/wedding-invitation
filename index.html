@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pozivnica za venčanje</title>
+<meta name="description" content="Digitalna pozivnica za venčanje — potvrdite dolazak.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pozivnica za venčanje">
+<meta property="og:description" content="Pozvani ste. Potvrdite dolazak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════ TOKENI ══════════════ */
+:root{
+  --ink:#0D2622; --ink-deep:#06120F; --linen:#F4EFE6;
+  --brass:#C39A4E; --brass-lit:#E3C88D; --rose:#C98F86;
+  --on-dark:rgba(244,239,230,.72);
+  --line-dark:rgba(227,200,141,.22);
+  --line-light:rgba(13,38,34,.14);
+  --display:"Prata",Georgia,serif;
+  --body:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --pad:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);background:var(--ink);color:var(--linen);
+  font-weight:300;line-height:1.65;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass-lit);outline-offset:3px;border-radius:2px}
+
+/* ══════════════ TIPOGRAFIJA ══════════════ */
+.eyebrow{
+  font-family:var(--body);font-size:.66rem;font-weight:600;
+  letter-spacing:.34em;text-transform:uppercase;
+  color:var(--brass);
+}
+.serif{font-family:var(--display);font-weight:400;letter-spacing:.005em}
+
+/* ══════════════ RIBBON (potpisni element) ══════════════ */
+.ribbon{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:1px;background:var(--line-dark);
+}
+.node{
+  width:7px;height:7px;background:var(--brass);
+  transform:rotate(45deg);margin:0 auto;
+}
+
+/* ══════════════ PEČAT ══════════════ */
+.seal{
+  width:104px;height:104px;border-radius:50%;
+  background:
+    radial-gradient(circle at 34% 30%, #E9D2A0 0%, var(--brass) 42%, #8E6A2C 100%);
+  display:grid;place-items:center;position:relative;
+  box-shadow:0 14px 34px rgba(0,0,0,.45), inset 0 -3px 8px rgba(0,0,0,.3);
+  flex:none;
+}
+.seal::after{
+  content:"";position:absolute;inset:9px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,.42);
+}
+.seal span{
+  font-family:var(--display);font-size:1.5rem;color:#2A1E08;
+  letter-spacing:.02em;text-shadow:0 1px 0 rgba(255,255,255,.28);
+}
+.seal.press{animation:press .9s cubic-bezier(.2,.9,.25,1) both}
+@keyframes press{
+  0%{transform:scale(1.9) rotate(-14deg);opacity:0;filter:blur(6px)}
+  60%{transform:scale(.94) rotate(3deg);opacity:1;filter:blur(0)}
+  100%{transform:scale(1) rotate(0);opacity:1}
+}
+
+/* ══════════════ HERO ══════════════ */
+.hero{
+  min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:clamp(48px,10vh,90px) var(--pad);position:relative;
+  background:
+    radial-gradient(120% 80% at 50% 0%, #164039 0%, var(--ink) 46%, var(--ink-deep) 100%);
+}
+.hero::before{
+  content:"";position:absolute;inset:14px;pointer-events:none;
+  border:1px solid var(--line-dark);
+}
+.hero-inner{position:relative;max-width:660px;width:100%}
+.hero .eyebrow{margin:30px 0 26px}
+.names{
+  font-family:var(--display);
+  font-size:clamp(3rem,13vw,6.6rem);
+  line-height:.98;letter-spacing:-.015em;
+}
+.amp{
+  display:block;font-family:var(--display);
+  font-size:clamp(1.1rem,3.4vw,1.6rem);
+  color:var(--brass);margin:.16em 0;font-style:italic;
+}
+.hero-date{
+  margin-top:30px;font-size:.78rem;font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--on-dark);
+}
+.hero-rule{
+  width:52px;height:1px;background:var(--brass);
+  margin:26px auto 0;opacity:.7;
+}
+.scroll-hint{
+  position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(244,239,230,.4);
+}
+.scroll-hint i{
+  display:block;width:1px;height:34px;background:var(--line-dark);
+  margin:10px auto 0;animation:drip 2.4s ease-in-out infinite;
+  transform-origin:top;
+}
+@keyframes drip{0%,100%{transform:scaleY(.35);opacity:.35}50%{transform:scaleY(1);opacity:1}}
+
+/* ══════════════ SEKCIJE ══════════════ */
+section{position:relative;padding:clamp(64px,11vh,110px) var(--pad)}
+.wrap{max-width:660px;margin:0 auto;position:relative;z-index:1}
+.light{background:var(--linen);color:var(--ink)}
+.light .eyebrow{color:#8A6A2A}
+.center{text-align:center}
+.lead{
+  font-family:var(--display);font-size:clamp(1.28rem,3.6vw,1.85rem);
+  line-height:1.5;margin-top:22px;
+}
+.note{margin-top:20px;font-size:1rem;line-height:1.75;opacity:.8}
+
+/* pozdrav gostu */
+.greet{
+  border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark);
+  padding:34px 0;margin-bottom:6px;
+}
+.greet-name{
+  font-family:var(--display);font-size:clamp(1.5rem,5vw,2.2rem);
+  line-height:1.3;
+}
+.greet .eyebrow{display:block;margin-bottom:14px}
+
+/* odbrojavanje */
+.count{display:flex;justify-content:center;gap:clamp(14px,5vw,42px);margin-top:34px}
+.count div{min-width:58px}
+.count b{
+  display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(2.1rem,8vw,3.4rem);line-height:1;
+  color:var(--brass-lit);font-variant-numeric:tabular-nums;
+}
+.count small{
+  display:block;margin-top:9px;font-size:.6rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--on-dark);
+}
+
+/* raspored */
+.tl{margin-top:44px;text-align:left}
+.tl-item{
+  display:grid;grid-template-columns:74px 1fr;gap:clamp(14px,4vw,30px);
+  padding:28px 0;border-top:1px solid var(--line-light);
+}
+.tl-item:last-child{border-bottom:1px solid var(--line-light)}
+.tl-time{
+  font-family:var(--display);font-size:1.15rem;color:#8A6A2A;
+  padding-top:2px;font-variant-numeric:tabular-nums;
+}
+.tl-title{font-family:var(--display);font-size:1.35rem;line-height:1.25}
+.tl-place{margin-top:7px;font-size:.87rem;font-weight:600;letter-spacing:.03em}
+.tl-desc{margin-top:9px;font-size:.93rem;opacity:.72;line-height:1.6}
+.maplink{
+  display:inline-block;margin-top:13px;font-size:.66rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:#8A6A2A;
+  border-bottom:1px solid currentColor;padding-bottom:3px;text-decoration:none;
+}
+.maplink:hover{color:var(--ink)}
+
+/* info kartice */
+.cards{display:grid;gap:1px;margin-top:40px;background:var(--line-dark)}
+@media(min-width:660px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--ink);padding:26px 22px;text-align:left}
+.card h4{
+  font-size:.64rem;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass);margin-bottom:11px;
+}
+.card p{font-size:.9rem;opacity:.78;line-height:1.6}
+
+/* ══════════════ FORMA ══════════════ */
+.rsvp{background:var(--ink-deep)}
+.form{margin-top:40px;text-align:left}
+.field{margin-bottom:26px}
+label.lbl{
+  display:block;font-size:.62rem;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--brass);margin-bottom:11px;
+}
+input[type=text],input[type=tel],textarea,select{
+  width:100%;background:transparent;border:none;
+  border-bottom:1px solid var(--line-dark);
+  color:var(--linen);font-family:var(--body);font-size:1rem;font-weight:300;
+  padding:11px 2px;border-radius:0;
+}
+textarea{resize:vertical;min-height:82px;line-height:1.6}
+input::placeholder,textarea::placeholder{color:rgba(244,239,230,.28)}
+input:focus,textarea:focus,select:focus{outline:none;border-bottom-color:var(--brass)}
+
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice label{
+  display:block;text-align:center;padding:16px 10px;cursor:pointer;
+  border:1px solid var(--line-dark);font-size:.82rem;font-weight:500;
+  letter-spacing:.06em;transition:.22s;
+}
+.choice input{position:absolute;opacity:0;width:0;height:0}
+.choice input:checked + span{color:var(--ink)}
+.choice label:has(input:checked){background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:700}
+.choice label:hover{border-color:var(--brass)}
+.choice input:focus-visible + span{outline:2px solid var(--brass-lit);outline-offset:6px}
+
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills label{
+  padding:10px 17px;border:1px solid var(--line-dark);cursor:pointer;
+  font-size:.82rem;transition:.22s;
+}
+.pills label:has(input:checked){background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:600}
+.pills input{position:absolute;opacity:0;width:0;height:0}
+
+.stepper{display:flex;align-items:center;gap:20px}
+.stepper button{
+  width:42px;height:42px;border:1px solid var(--line-dark);background:none;
+  color:var(--linen);font-size:1.3rem;cursor:pointer;font-family:var(--body);
+  line-height:1;transition:.2s;
+}
+.stepper button:hover:not(:disabled){border-color:var(--brass);color:var(--brass)}
+.stepper button:disabled{opacity:.25;cursor:not-allowed}
+.stepper output{
+  font-family:var(--display);font-size:1.9rem;min-width:36px;text-align:center;
+  color:var(--brass-lit);
+}
+.hint{font-size:.76rem;opacity:.5;margin-top:9px;line-height:1.5}
+
+.btn{
+  width:100%;padding:19px;background:var(--brass);border:none;color:#12100A;
+  font-family:var(--body);font-size:.74rem;font-weight:700;letter-spacing:.24em;
+  text-transform:uppercase;cursor:pointer;transition:.25s;margin-top:8px;
+}
+.btn:hover:not(:disabled){background:var(--brass-lit)}
+.btn:disabled{opacity:.5;cursor:wait}
+
+.msg{margin-top:16px;font-size:.86rem;line-height:1.5;display:none}
+.msg.err{display:block;color:var(--rose)}
+
+/* stanje: uspeh */
+.done{display:none;text-align:center;padding:14px 0}
+.done.on{display:block;animation:fade .7s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.done h3{font-family:var(--display);font-size:1.9rem;margin:28px 0 12px}
+.done p{opacity:.75;font-size:.97rem;max-width:400px;margin:0 auto}
+.again{
+  margin-top:26px;background:none;border:none;color:var(--brass);
+  font-family:var(--body);font-size:.64rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;cursor:pointer;border-bottom:1px solid currentColor;
+  padding-bottom:3px;
+}
+
+/* footer */
+footer{
+  background:var(--ink);text-align:center;
+  padding:clamp(56px,9vh,84px) var(--pad);border-top:1px solid var(--line-dark);
+}
+.contacts{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 36px;margin-top:26px}
+.contacts a{
+  text-decoration:none;font-size:.9rem;border-bottom:1px solid var(--line-dark);
+  padding-bottom:4px;
+}
+.contacts a:hover{border-color:var(--brass);color:var(--brass-lit)}
+.contacts span{display:block;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin-bottom:6px}
+.tag{margin-top:40px;font-family:var(--display);font-size:1.05rem;color:var(--brass)}
+.sig{margin-top:30px;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;opacity:.3}
+
+/* demo traka */
+.demo{
+  background:var(--brass);color:#12100A;text-align:center;
+  padding:9px 16px;font-size:.68rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="demo" id="demoBar" hidden>Demo režim — odgovori se ne čuvaju</div>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="seal press" aria-hidden="true"><span id="seal">A Đ</span></div>
+    <p class="eyebrow" id="ey">Pozivnica za venčanje</p>
+    <h1 class="names">
+      <span id="ona">Aleksandra</span>
+      <em class="amp">i</em>
+      <span id="on">Đorđe</span>
+    </h1>
+    <p class="hero-date" id="heroDate">Subota, 12. septembar 2026.</p>
+    <div class="hero-rule"></div>
+  </div>
+  <p class="scroll-hint">Listajte<i></i></p>
+</header>
+
+<!-- ═══════════ POZDRAV + ODBROJAVANJE ═══════════ -->
+<section>
+  <div class="wrap center">
+    <div class="greet rv" id="greetBox" hidden>
+      <span class="eyebrow">Pozvani ste</span>
+      <p class="greet-name" id="greetName">—</p>
+    </div>
+
+    <p class="lead rv" id="citat"></p>
+    <p class="note rv" id="uvod"></p>
+
+    <div class="count rv" id="count">
+      <div><b id="d">00</b><small>dana</small></div>
+      <div><b id="h">00</b><small>sati</small></div>
+      <div><b id="m">00</b><small>min</small></div>
+      <div><b id="s">00</b><small>sek</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RASPORED ═══════════ -->
+<section class="light">
+  <div class="wrap">
+    <p class="eyebrow center rv">Kako izgleda dan</p>
+    <div class="tl" id="tl"></div>
+  </div>
+</section>
+
+<!-- ═══════════ INFO ═══════════ -->
+<section>
+  <div class="wrap">
+    <p class="eyebrow center rv">Dobro je znati</p>
+    <div class="cards rv" id="cards"></div>
+  </div>
+</section>
+
+<!-- ═══════════ RSVP ═══════════ -->
+<section class="rsvp" id="rsvp">
+  <div class="wrap">
+    <p class="eyebrow center rv">Potvrda dolaska</p>
+    <p class="lead center rv" id="rokTekst"></p>
+
+    <form class="form rv" id="form" novalidate>
+      <div class="field">
+        <span class="lbl">Da li dolazite?</span>
+        <div class="choice">
+          <label><input type="radio" name="status" value="Dolazi" required><span>Radujem se, dolazim</span></label>
+          <label><input type="radio" name="status" value="Ne dolazi"><span>Nažalost, ne mogu</span></label>
+        </div>
+      </div>
+
+      <div id="ifYes">
+        <div class="field">
+          <span class="lbl">Broj osoba</span>
+          <div class="stepper">
+            <button type="button" id="minus" aria-label="Manje osoba">−</button>
+            <output id="brojOut" aria-live="polite">1</output>
+            <button type="button" id="plus" aria-label="Više osoba">+</button>
+          </div>
+          <p class="hint" id="maxHint"></p>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="imena">Imena svih koji dolaze</label>
+          <input type="text" id="imena" placeholder="npr. Marko Petrović, Ana Petrović">
+        </div>
+
+        <div class="field" id="meniField">
+          <span class="lbl">Meni</span>
+          <div class="pills" id="meni"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="telefon">Telefon (za svaki slučaj)</label>
+        <input type="tel" id="telefon" placeholder="+381 6x xxx xxxx">
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="poruka">Poruka mladencima</label>
+        <textarea id="poruka" placeholder="Nešto lepo, ili nešto smešno."></textarea>
+      </div>
+
+      <button class="btn" type="submit" id="submit">Pošalji odgovor</button>
+      <p class="msg" id="msg"></p>
+    </form>
+
+    <div class="done" id="done">
+      <div class="seal" aria-hidden="true"><span id="seal2">A Đ</span></div>
+      <h3 id="doneTitle">Zabeleženo</h3>
+      <p id="doneText"></p>
+      <button class="again" id="again" type="button">Ispravi odgovor</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="wrap">
+    <p class="eyebrow">Pitanja?</p>
+    <div class="contacts" id="kontakt"></div>
+    <p class="tag" id="hashtag"></p>
+    <p class="sig" id="sig"></p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const C = window.CONFIG || CONFIG;
+  const DEMO = !C.API_URL || C.API_URL.indexOf("http") !== 0;
+
+  /* ── boje iz configa ── */
+  const r = document.documentElement.style;
+  r.setProperty('--ink',C.boje.ink); r.setProperty('--ink-deep',C.boje.inkDeep);
+  r.setProperty('--linen',C.boje.linen); r.setProperty('--brass',C.boje.brass);
+  r.setProperty('--brass-lit',C.boje.brassLit); r.setProperty('--rose',C.boje.rose);
+
+  /* ── popuni sadržaj ── */
+  document.title = C.ona + " i " + C.on + " — Pozivnica";
+  $('#ona').textContent = C.ona;
+  $('#on').textContent = C.on;
+  $('#seal').textContent = C.inicijali;
+  $('#seal2').textContent = C.inicijali;
+  $('#heroDate').textContent = C.datumTekst;
+  $('#citat').textContent = C.citat;
+  $('#uvod').textContent = C.uvod;
+  $('#rokTekst').textContent = C.rokTekst;
+  $('#hashtag').textContent = C.hashtag || "";
+  $('#sig').textContent = C.ona + " & " + C.on + " · " + C.godina;
+  if(DEMO) $('#demoBar').hidden = false;
+
+  /* raspored */
+  $('#tl').innerHTML = C.raspored.map(x => `
+    <div class="tl-item rv">
+      <div class="tl-time">${x.vreme}</div>
+      <div>
+        <p class="tl-title">${x.naslov}</p>
+        <p class="tl-place">${x.mesto}</p>
+        ${x.opis ? `<p class="tl-desc">${x.opis}</p>` : ""}
+        ${x.mapa ? `<a class="maplink" href="${x.mapa}" target="_blank" rel="noopener">Otvori mapu</a>` : ""}
+      </div>
+    </div>`).join("");
+
+  /* info kartice */
+  $('#cards').innerHTML = C.info.map(x =>
+    `<div class="card"><h4>${x.naslov}</h4><p>${x.tekst}</p></div>`).join("");
+
+  /* kontakti */
+  $('#kontakt').innerHTML = C.kontakt.map(k =>
+    `<a href="tel:${k.telefon.replace(/\s/g,'')}"><span>${k.ime}</span>${k.telefon}</a>`).join("");
+
+  /* meni opcije */
+  const meniBox = $('#meni');
+  if(C.meniOpcije && C.meniOpcije.length){
+    meniBox.innerHTML = C.meniOpcije.map((o,i) =>
+      `<label><input type="radio" name="meni" value="${o}" ${i===0?'checked':''}><span>${o}</span></label>`).join("");
+  } else { $('#meniField').remove(); }
+
+  /* ── odbrojavanje ── */
+  const target = new Date(C.datumISO).getTime();
+  const pad = n => String(n).padStart(2,'0');
+  function tick(){
+    let diff = target - Date.now();
+    if(diff <= 0){ $('#count').innerHTML =
+      '<p class="lead" style="margin:0">Danas je taj dan.</p>'; return; }
+    const dd = Math.floor(diff/864e5);
+    const hh = Math.floor(diff/36e5)%24;
+    const mm = Math.floor(diff/6e4)%60;
+    const ss = Math.floor(diff/1e3)%60;
+    $('#d').textContent = dd; $('#h').textContent = pad(hh);
+    $('#m').textContent = pad(mm); $('#s').textContent = pad(ss);
+    setTimeout(tick, 1000);
+  }
+  tick();
+
+  /* ── reveal on scroll ── */
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+  },{threshold:.14, rootMargin:"0px 0px -40px 0px"});
+  document.querySelectorAll('.rv').forEach((el,i) => {
+    el.style.transitionDelay = Math.min(i%6,5)*70 + "ms";
+    io.observe(el);
+  });
+
+  /* ══════════ GOST ══════════ */
+  const params = new URLSearchParams(location.search);
+  let kod = params.get('kod') || params.get('code') || "";
+  if(!kod){ // podrška za /rsvp/KOD
+    const m = location.pathname.match(/\/rsvp\/([A-Za-z0-9_-]+)/);
+    if(m) kod = m[1];
+  }
+  let maxOsoba = 10;
+  let broj = 1;
+
+  const brojOut = $('#brojOut');
+  function renderBroj(){
+    brojOut.textContent = broj;
+    $('#minus').disabled = broj <= 1;
+    $('#plus').disabled = broj >= maxOsoba;
+  }
+  $('#minus').onclick = () => { if(broj>1){broj--;renderBroj();} };
+  $('#plus').onclick  = () => { if(broj<maxOsoba){broj++;renderBroj();} };
+
+  function setMax(n){
+    maxOsoba = Math.max(1, n||1);
+    broj = Math.min(broj, maxOsoba);
+    $('#maxHint').textContent = maxOsoba > 1
+      ? "Pozivnica važi za najviše " + maxOsoba + " osobe/osoba."
+      : "Pozivnica važi za jednu osobu.";
+    renderBroj();
+  }
+  setMax(2);
+
+  function prikaziPozdrav(ime){
+    const b = $('#greetBox');
+    b.hidden = false;
+    b.classList.add('in');
+    $('#greetName').textContent = ime;
+  }
+
+  async function ucitajGosta(){
+    if(!kod || DEMO){
+      if(kod && DEMO) prikaziPozdrav("Poštovana porodice Petrović");
+      return;
+    }
+    try{
+      const res = await fetch(C.API_URL + "?action=gost&kod=" + encodeURIComponent(kod));
+      const d = await res.json();
+      if(!d.ok) return;
+      prikaziPozdrav(d.ime);
+      setMax(d.maxOsoba);
+      if(d.status){ // već odgovorio
+        prefill(d);
+      }
+    }catch(e){ /* tiho — pozivnica i dalje radi */ }
+  }
+
+  function prefill(d){
+    const rb = document.querySelector('input[name=status][value="'+d.status+'"]');
+    if(rb){ rb.checked = true; toggleYes(); }
+    if(d.brojOsoba){ broj = Math.min(+d.brojOsoba||1, maxOsoba); renderBroj(); }
+    if(d.imena) $('#imena').value = d.imena;
+    if(d.telefon) $('#telefon').value = d.telefon;
+    if(d.poruka) $('#poruka').value = d.poruka;
+    if(d.meni){
+      const mr = document.querySelector('input[name=meni][value="'+d.meni+'"]');
+      if(mr) mr.checked = true;
+    }
+    pokaziUspeh(d.status, true);
+  }
+  ucitajGosta();
+
+  /* ── dolazi / ne dolazi ── */
+  function toggleYes(){
+    const v = document.querySelector('input[name=status]:checked');
+    $('#ifYes').style.display = (v && v.value === "Ne dolazi") ? "none" : "block";
+  }
+  document.querySelectorAll('input[name=status]').forEach(r => r.addEventListener('change', toggleYes));
+
+  /* ── slanje ── */
+  const form = $('#form'), msg = $('#msg'), doneBox = $('#done');
+
+  function pokaziUspeh(status, tiho){
+    form.style.display = "none";
+    doneBox.classList.add('on');
+    doneBox.querySelector('.seal').classList.add('press');
+    if(status === "Ne dolazi"){
+      $('#doneTitle').textContent = "Hvala što ste javili";
+      $('#doneText').textContent = "Žao nam je što nećete moći. Mislićemo na vas tog dana.";
+    }else{
+      $('#doneTitle').textContent = "Vidimo se!";
+      $('#doneText').textContent = "Vaš dolazak je zabeležen. Čuvamo vam mesto za stolom.";
+    }
+    if(!tiho) doneBox.scrollIntoView({block:"center"});
+  }
+
+  $('#again').onclick = () => {
+    doneBox.classList.remove('on');
+    form.style.display = "block";
+    form.scrollIntoView({block:"center"});
+  };
+
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+    msg.className = "msg";
+    const st = document.querySelector('input[name=status]:checked');
+    if(!st){ msg.className="msg err"; msg.textContent="Označite da li dolazite."; return; }
+
+    const meniEl = document.querySelector('input[name=meni]:checked');
+    const podaci = {
+      action: "rsvp",
+      kod: kod,
+      status: st.value,
+      brojOsoba: st.value === "Ne dolazi" ? 0 : broj,
+      imena: $('#imena').value.trim(),
+      meni: meniEl ? meniEl.value : "",
+      telefon: $('#telefon').value.trim(),
+      poruka: $('#poruka').value.trim()
+    };
+
+    const btn = $('#submit');
+    btn.disabled = true; btn.textContent = "Šaljem…";
+
+    if(DEMO){
+      setTimeout(() => { pokaziUspeh(podaci.status); btn.disabled=false; btn.textContent="Pošalji odgovor"; }, 600);
+      return;
+    }
+
+    try{
+      const res = await fetch(C.API_URL, {
+        method:"POST",
+        headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify(podaci)
+      });
+      const d = await res.json();
+      if(d.ok) pokaziUspeh(podaci.status);
+      else { msg.className="msg err"; msg.textContent = d.greska || "Nešto nije prošlo. Pokušajte ponovo."; }
+    }catch(e){
+      msg.className="msg err";
+      msg.textContent = "Nema veze sa serverom. Proverite internet i pokušajte ponovo.";
+    }finally{
+      btn.disabled = false; btn.textContent = "Pošalji odgovor";
+    }
+  });
+})();
+</script>
+</body>
+</html>
