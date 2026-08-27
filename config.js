@@ -8,7 +8,7 @@ const CONFIG = {
   /* ── Veza sa bazom (Google Sheet) ────────────────────────
      Zalepi ovde URL koji dobiješ na kraju koraka 2 iz UPUTSTVO.md.
      Dok je prazno, sajt radi u DEMO režimu (forma se ne čuva). */
-  API_URL: "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQ-ML4tX6YcZqQ2SJVBeXE6jNsLXLue9eGXisMt9a7ro_ZlvlZSrWYTwH9-o_Qd6ECis4KTYqcsJGQ8XvEkKMuyyzYFYyFqv6MFglUAYFNkAadYf6qhLeQZxWLeELdK9Tv1EjlVszmJpPGFc-cR1KR6C8iNICRJV9Nw8WqkmGGrl99rdHLs8JPcPa3063P934zAiVWQr66jbpnosKxVl4iDtmN_TU6DGxTZ9eiJ4NfBcJneWDP7hw3e8whL7F4sjhNX-0R6nhRH9pxK8kvEA440bYcPHA&lib=MYJXfJu41tOysyfYiVTH7p0Yy3JO6TKWS",
+  API_URL: "https://script.google.com/macros/s/AKfycbwtxLDkAxp43viPwlkOKW_coE3WCcmhnN0UsmdEPQBSKt1IT3ynTgonl4EvWz0b9ZVg/exec",
 
   /* ── Mladenci ───────────────────────────────────────────── */
   ona: "Aleksandra",
