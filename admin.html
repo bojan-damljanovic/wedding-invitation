@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Spisak gostiju</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D2622;--ink2:#123430;--deep:#06120F;--linen:#F4EFE6;
+  --brass:#C39A4E;--brass-lit:#E3C88D;--rose:#C98F86;--green:#7FB88A;
+  --line:rgba(227,200,141,.18);--dim:rgba(244,239,230,.6);
+  --d:"Prata",Georgia,serif;--b:"Manrope",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--b);background:var(--deep);color:var(--linen);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--brass-lit);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(20px,4vw,44px)}
+h1{font-family:var(--d);font-weight:400;font-size:clamp(1.6rem,4vw,2.3rem)}
+.eyebrow{font-size:.6rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--brass)}
+.muted{color:var(--dim);font-size:.87rem}
+
+/* login */
+.gate{min-height:100svh;display:grid;place-items:center;padding:24px}
+[hidden]{display:none!important}
+.gate .box{width:100%;max-width:360px;text-align:center}
+input,select,textarea{
+  width:100%;background:var(--ink);border:1px solid var(--line);color:var(--linen);
+  font-family:var(--b);font-size:.95rem;font-weight:300;padding:13px 14px;border-radius:6px;
+}
+input::placeholder{color:rgba(244,239,230,.3)}
+input:focus,select:focus{outline:none;border-color:var(--brass)}
+.btn{
+  background:var(--brass);color:#12100A;border:none;border-radius:6px;
+  padding:13px 22px;font-family:var(--b);font-weight:700;font-size:.7rem;
+  letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:.2s;
+}
+.btn:hover:not(:disabled){background:var(--brass-lit)}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--linen)}
+.btn.ghost:hover{border-color:var(--brass);color:var(--brass-lit);background:none}
+.err{color:var(--rose);font-size:.85rem;margin-top:12px;min-height:1.2em}
+
+/* head */
+.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;
+  padding-bottom:24px;border-bottom:1px solid var(--line)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--line);margin:28px 0;border:1px solid var(--line)}
+.stat{background:var(--ink);padding:20px 18px}
+.stat b{display:block;font-family:var(--d);font-size:2.1rem;line-height:1;font-weight:400}
+.stat small{display:block;margin-top:9px;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.stat.ok b{color:var(--green)} .stat.no b{color:var(--rose)} .stat.wait b{color:var(--brass-lit)}
+
+/* filters */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.bar input{max-width:280px}
+.chip{padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:none;
+  color:var(--dim);font-family:var(--b);font-size:.76rem;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--brass)}
+.chip.on{background:var(--brass);border-color:var(--brass);color:#12100A;font-weight:600}
+
+/* table */
+.tbl{border:1px solid var(--line);border-radius:8px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--ink2);text-align:left;padding:13px 14px;font-size:.58rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--brass);white-space:nowrap}
+td{padding:14px;border-top:1px solid var(--line);vertical-align:top;background:var(--ink)}
+tr:hover td{background:var(--ink2)}
+.nm{font-weight:500;font-size:.95rem}
+.sub{font-size:.75rem;color:var(--dim);margin-top:4px}
+.tag{display:inline-block;padding:4px 11px;border-radius:999px;font-size:.68rem;font-weight:700;letter-spacing:.05em;white-space:nowrap}
+.tag.ok{background:rgba(127,184,138,.16);color:var(--green)}
+.tag.no{background:rgba(201,143,134,.16);color:var(--rose)}
+.tag.wait{background:rgba(227,200,141,.13);color:var(--brass-lit)}
+.mini{background:none;border:1px solid var(--line);color:var(--dim);border-radius:5px;
+  padding:6px 10px;font-family:var(--b);font-size:.68rem;cursor:pointer;transition:.2s;white-space:nowrap}
+.mini:hover{border-color:var(--brass);color:var(--brass-lit)}
+.mini.del:hover{border-color:var(--rose);color:var(--rose)}
+.rowact{display:flex;gap:6px;flex-wrap:wrap}
+.poruka{font-style:italic;color:var(--dim);font-size:.82rem;max-width:260px}
+.empty{padding:56px 20px;text-align:center;color:var(--dim);background:var(--ink)}
+
+/* modal */
+.mod{position:fixed;inset:0;background:rgba(3,10,8,.82);display:none;place-items:center;padding:20px;z-index:50}
+.mod.on{display:grid}
+.mod .card{background:var(--ink);border:1px solid var(--line);border-radius:10px;
+  padding:clamp(22px,4vw,34px);width:100%;max-width:460px;max-height:90vh;overflow:auto}
+.mod h3{font-family:var(--d);font-weight:400;font-size:1.4rem;margin-bottom:6px}
+.f{margin-top:18px}
+.f label{display:block;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);margin-bottom:8px}
+.modact{display:flex;gap:10px;margin-top:26px}
+.modact .btn{flex:1}
+.linkbox{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:13px;
+  font-size:.8rem;word-break:break-all;margin-top:10px;font-family:ui-monospace,monospace}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--brass);color:#12100A;padding:12px 24px;border-radius:999px;font-size:.8rem;
+  font-weight:600;transition:.3s;z-index:60;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){
+  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="gate" id="gate">
+  <div class="box">
+    <p class="eyebrow">Pristup za mladence</p>
+    <h1 style="margin:14px 0 26px">Spisak gostiju</h1>
+    <div class="f"><input type="password" id="pass" placeholder="Lozinka" autocomplete="current-password"></div>
+    <button class="btn" id="login" style="width:100%;margin-top:14px">Uđi</button>
+    <p class="err" id="loginErr"></p>
+  </div>
+</div>
+
+<!-- ── PANEL ── -->
+<div class="wrap" id="panel" hidden>
+  <div class="top">
+    <div>
+      <p class="eyebrow">Potvrde dolaska</p>
+      <h1 id="title">Spisak gostiju</h1>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="refresh">Osveži</button>
+      <button class="btn ghost" id="csv">Preuzmi CSV</button>
+      <button class="btn" id="addBtn">Dodaj gosta</button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="bar">
+    <input type="text" id="search" placeholder="Pretraži po imenu…">
+    <button class="chip on" data-f="all">Svi</button>
+    <button class="chip" data-f="Dolazi">Dolaze</button>
+    <button class="chip" data-f="Ne dolazi">Ne dolaze</button>
+    <button class="chip" data-f="">Čeka odgovor</button>
+  </div>
+
+  <div class="tbl">
+    <table>
+      <thead><tr>
+        <th>Gost</th><th>Status</th><th>Osoba</th><th>Meni</th><th>Poruka</th><th></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>Nema gostiju za prikaz.</div>
+  </div>
+  <p class="muted" style="margin-top:16px" id="stamp"></p>
+</div>
+
+<!-- ── MODAL: dodaj gosta ── -->
+<div class="mod" id="modAdd">
+  <div class="card">
+    <h3>Novi gost</h3>
+    <p class="muted">Upiši kome šalješ pozivnicu. Link se pravi automatski.</p>
+    <div class="f"><label for="gIme">Ime na pozivnici</label>
+      <input type="text" id="gIme" placeholder="npr. Porodica Petrović"></div>
+    <div class="f"><label for="gMax">Za koliko osoba važi</label>
+      <input type="number" id="gMax" value="2" min="1" max="20"></div>
+    <p class="err" id="addErr"></p>
+    <div class="modact">
+      <button class="btn ghost" data-close>Otkaži</button>
+      <button class="btn" id="addSave">Napravi link</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: link ── -->
+<div class="mod" id="modLink">
+  <div class="card">
+    <h3 id="linkName">Link je spreman</h3>
+    <p class="muted">Pošalji ovaj link samo ovom gostu — po njemu ga prepoznajemo.</p>
+    <div class="linkbox" id="linkText"></div>
+    <div class="modact">
+      <button class="btn ghost" id="copyLink">Kopiraj link</button>
+      <button class="btn" id="waLink">Pošalji na WhatsApp</button>
+    </div>
+    <button class="btn ghost" data-close style="width:100%;margin-top:10px">Zatvori</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const C = CONFIG;
+  let KEY = "", GOSTI = [], filter = "all", term = "";
+
+  const base = location.origin + location.pathname.replace(/admin\.html$/,'');
+  const linkFor = kod => base + "?kod=" + kod;
+
+  function toast(t){
+    const el = $('#toast'); el.textContent = t; el.classList.add('on');
+    setTimeout(()=>el.classList.remove('on'), 2200);
+  }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  async function api(params){
+    const url = C.API_URL + "?" + new URLSearchParams(Object.assign({kljuc:KEY}, params));
+    const res = await fetch(url);
+    return res.json();
+  }
+  async function post(body){
+    const res = await fetch(C.API_URL, {
+      method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify(Object.assign({kljuc:KEY}, body))
+    });
+    return res.json();
+  }
+
+  /* ── login ── */
+  async function login(){
+    const p = $('#pass').value.trim();
+    if(!p){ $('#loginErr').textContent = "Unesi lozinku."; return; }
+    if(!C.API_URL){ $('#loginErr').textContent = "API_URL nije podešen u config.js."; return; }
+    $('#login').disabled = true; $('#loginErr').textContent = "";
+    KEY = p;
+    try{
+      const d = await api({action:"spisak"});
+      if(!d.ok){ $('#loginErr').textContent = d.greska || "Pogrešna lozinka."; KEY=""; return; }
+      sessionStorage.setItem('k', KEY);
+      $('#gate').hidden = true; $('#panel').hidden = false;
+      $('#title').textContent = C.ona + " i " + C.on;
+      render(d);
+    }catch(e){
+      $('#loginErr').textContent = "Nema veze sa serverom. Proveri API_URL u config.js.";
+      KEY = "";
+    }finally{ $('#login').disabled = false; }
+  }
+  $('#login').onclick = login;
+  $('#pass').addEventListener('keydown', e => { if(e.key==='Enter') login(); });
+
+  const saved = sessionStorage.getItem('k');
+  if(saved && C.API_URL){ $('#pass').value = saved; login(); }
+
+  /* ── učitavanje ── */
+  async function load(){
+    try{
+      const d = await api({action:"spisak"});
+      if(d.ok) render(d); else toast(d.greska || "Greška pri učitavanju");
+    }catch(e){ toast("Nema veze sa serverom"); }
+  }
+  $('#refresh').onclick = () => { load(); toast("Osveženo"); };
+
+  function render(d){
+    GOSTI = d.gosti || [];
+    const dolaze = GOSTI.filter(g => g.status === "Dolazi");
+    const ne     = GOSTI.filter(g => g.status === "Ne dolazi");
+    const ceka   = GOSTI.filter(g => !g.status);
+    const osoba  = dolaze.reduce((s,g) => s + (+g.brojOsoba||0), 0);
+
+    $('#stats').innerHTML = `
+      <div class="stat"><b>${GOSTI.length}</b><small>pozivnica</small></div>
+      <div class="stat ok"><b>${dolaze.length}</b><small>potvrdilo</small></div>
+      <div class="stat no"><b>${ne.length}</b><small>ne dolazi</small></div>
+      <div class="stat wait"><b>${ceka.length}</b><small>čeka odgovor</small></div>
+      <div class="stat ok"><b>${osoba}</b><small>gostiju ukupno</small></div>`;
+
+    $('#stamp').textContent = "Poslednje osveženo: " + new Date().toLocaleString('sr-RS');
+    rows();
+  }
+
+  function rows(){
+    const list = GOSTI.filter(g => {
+      const okF = filter === "all" ? true : (g.status || "") === filter;
+      const okT = !term || (g.ime||"").toLowerCase().includes(term) ||
+                           (g.imena||"").toLowerCase().includes(term);
+      return okF && okT;
+    });
+    $('#empty').hidden = list.length > 0;
+    $('#rows').innerHTML = list.map(g => {
+      const st = g.status === "Dolazi" ? '<span class="tag ok">Dolazi</span>'
+               : g.status === "Ne dolazi" ? '<span class="tag no">Ne dolazi</span>'
+               : '<span class="tag wait">Čeka</span>';
+      return `<tr>
+        <td>
+          <div class="nm">${esc(g.ime)}</div>
+          ${g.imena ? `<div class="sub">${esc(g.imena)}</div>` : ""}
+          ${g.telefon ? `<div class="sub">${esc(g.telefon)}</div>` : ""}
+        </td>
+        <td>${st}${g.azurirano ? `<div class="sub">${esc(g.azurirano)}</div>` : ""}</td>
+        <td>${g.status === "Dolazi" ? esc(g.brojOsoba) : "—"} <span class="sub">od ${esc(g.maxOsoba)}</span></td>
+        <td>${esc(g.meni) || "—"}</td>
+        <td><div class="poruka">${esc(g.poruka) || "—"}</div></td>
+        <td><div class="rowact">
+          <button class="mini" data-link="${esc(g.kod)}" data-ime="${esc(g.ime)}">Link</button>
+          <button class="mini del" data-del="${esc(g.kod)}" data-ime="${esc(g.ime)}">Obriši</button>
+        </div></td>
+      </tr>`;
+    }).join("");
+  }
+
+  document.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); filter = c.dataset.f; rows();
+  });
+  $('#search').addEventListener('input', e => { term = e.target.value.toLowerCase().trim(); rows(); });
+
+  /* ── akcije u redu ── */
+  $('#rows').addEventListener('click', async e => {
+    const l = e.target.closest('[data-link]');
+    if(l){ pokaziLink(l.dataset.ime, l.dataset.link); return; }
+    const dl = e.target.closest('[data-del]');
+    if(dl){
+      if(!confirm('Obrisati "' + dl.dataset.ime + '" sa spiska? Njegov link prestaje da radi.')) return;
+      const d = await post({action:"obrisi", kod: dl.dataset.del});
+      if(d.ok){ toast("Obrisano"); load(); } else toast(d.greska || "Greška");
+    }
+  });
+
+  /* ── modali ── */
+  document.querySelectorAll('[data-close]').forEach(b =>
+    b.onclick = () => document.querySelectorAll('.mod').forEach(m => m.classList.remove('on')));
+  document.querySelectorAll('.mod').forEach(m =>
+    m.addEventListener('click', e => { if(e.target === m) m.classList.remove('on'); }));
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') document.querySelectorAll('.mod').forEach(m => m.classList.remove('on'));
+  });
+
+  $('#addBtn').onclick = () => {
+    $('#gIme').value = ""; $('#gMax').value = "2"; $('#addErr').textContent = "";
+    $('#modAdd').classList.add('on'); $('#gIme').focus();
+  };
+  $('#addSave').onclick = async () => {
+    const ime = $('#gIme').value.trim();
+    if(!ime){ $('#addErr').textContent = "Upiši ime gosta."; return; }
+    $('#addSave').disabled = true;
+    const d = await post({action:"dodaj", ime: ime, maxOsoba: +$('#gMax').value || 1});
+    $('#addSave').disabled = false;
+    if(d.ok){
+      $('#modAdd').classList.remove('on');
+      pokaziLink(ime, d.kod);
+      load();
+    } else $('#addErr').textContent = d.greska || "Greška pri čuvanju.";
+  };
+
+  let trenutni = "";
+  function pokaziLink(ime, kod){
+    trenutni = linkFor(kod);
+    $('#linkName').textContent = ime;
+    $('#linkText').textContent = trenutni;
+    $('#modLink').classList.add('on');
+  }
+  $('#copyLink').onclick = async () => {
+    try{ await navigator.clipboard.writeText(trenutni); toast("Link kopiran"); }
+    catch(e){ toast("Kopiraj ručno iz polja iznad"); }
+  };
+  $('#waLink').onclick = () => {
+    const t = "Pozvani ste na venčanje — " + C.ona + " i " + C.on + " " + C.datumTekst +
+              "\n\nPotvrdite dolazak ovde:\n" + trenutni;
+    window.open("https://wa.me/?text=" + encodeURIComponent(t), "_blank");
+  };
+
+  /* ── CSV ── */
+  $('#csv').onclick = () => {
+    const head = ["Ime","Status","Broj osoba","Max","Imena","Meni","Telefon","Poruka","Ažurirano","Link"];
+    const q = v => '"' + String(v==null?"":v).replace(/"/g,'""') + '"';
+    const csv = "\uFEFF" + [head.map(q).join(",")].concat(
+      GOSTI.map(g => [g.ime,g.status||"Čeka",g.brojOsoba||"",g.maxOsoba,g.imena||"",
+                      g.meni||"",g.telefon||"",g.poruka||"",g.azurirano||"",linkFor(g.kod)].map(q).join(","))
+    ).join("\n");
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+    a.download = "gosti-" + new Date().toISOString().slice(0,10) + ".csv";
+    a.click(); URL.revokeObjectURL(a.href);
+    toast("CSV preuzet");
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/rsvp/:kod", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/admin.html",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}
